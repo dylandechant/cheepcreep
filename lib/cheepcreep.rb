@@ -4,6 +4,8 @@ require "httparty"
 require "pry"
 
 module Cheepcreep
+  class CreateGithubUserTable < ActiveRecord::Base
+  end
 end
 
 class Github
@@ -18,7 +20,7 @@ end
 
 
 class CheepcreepApp
-  
+
 end
 
 binding.pry
