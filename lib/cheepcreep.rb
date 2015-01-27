@@ -52,6 +52,32 @@ def get_username
   gets.chomp
 end
 
+#=====================#
+# => do these tonight
+# => do status code checks
+# => do rescues
+#=====================#
+
+def list_gists
+end
+
+def create_gist
+end
+
+def edit_gist
+end
+
+def delete_gist
+end
+
+def star_gist
+end
+
+def unstar_gist
+end
+
+#=====================#
+
 def insert_database(users = [])
   binding.pry
   users.each do |x|
