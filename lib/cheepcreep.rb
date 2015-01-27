@@ -5,6 +5,7 @@ require "pry"
 
 module Cheepcreep
   class GithubUser < ActiveRecord::Base
+    validates :login, uniqueness: true, presence: true
   end
 end
 
@@ -17,18 +18,14 @@ class Github
   end
 
   #takes a username and returns a list of their followers usernames via the [followers call][followers]
-  def get_followers(input = 'redline6561', options = {})
+  def get_followers(input = 'redline6561', options = {:query => {:per_page => 100, :page => 2}})
     options.merge!({:basic_auth => @auth})
     resp = self.class.get("/users/#{input}/followers", options)
     data = JSON.parse(resp.body)
-
     users_info = []
-
-    data.sample(20).each do |x|
+    data.each do |x|
       users_info << get_user_info(x['login'])
     end
-    return users_info
-  
   end
 
   #grabs a single username
@@ -50,8 +47,10 @@ def get_username
 end
 
 def insert_database(users = [])
+  binding.pry
   users.each do |x|
-    Cheepcreep::GithubUser.create(login: x['login'], name: x['name'], blog: x['blog'], plublic_repos: x['public_repos'].to_i, followers: x['followers'].to_i, following: x['following'].to_i)
+    Cheepcreep::GithubUser.create(login: x['login'], name: x['name'], blog: x['blog'], plublic_repos: x['public_repos'], followers: x['followers'], following: x['following'])
+    puts "Processing: #{x['login']}"
   end
   puts "Database updated successfully."
   gets
@@ -61,18 +60,12 @@ def show_users
   system 'clear'
   puts "All users in database: "
   Cheepcreep::GithubUser.order(followers: :desc).each do |x|
-    puts "Followers: #{x.followers} \t\t User: #{x.login}"
+    puts "Followers: #{x.followers} \t User: #{x.login}"
   end
   gets
 end
 
-
-user_name = 'apitestfun'
-password = 'ironyard1'
-
 exit = false
-
-
 while exit != 3
   system 'clear'
   puts "Github API tests..."
@@ -82,7 +75,6 @@ while exit != 3
   puts "2) Show users sorted by followers" 
   puts "3) Exit"
   exit = gets.chomp.to_i
-
   case exit
   when 1
     followers = user_input_for_followers
@@ -91,6 +83,5 @@ while exit != 3
   when 2
     show_users
   end
-
 end
 
