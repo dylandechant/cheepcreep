@@ -39,13 +39,6 @@ class Github
   end
 end
 
-
-class CheepcreepApp < ActiveRecord::Base
-  
-end
-
-
-
 def user_input_for_followers
   print "Enter a username to pull their followers: "
   gets.chomp
