@@ -51,7 +51,7 @@ end
 
 def insert_database(users = [])
   users.each do |x|
-    Cheepcreep::GithubUser.create(login: x['login'], name: x['name'], blog: x['blog'], plublic_repos: x['public_repos'], followers: x['followers'], following: x['following'])
+    Cheepcreep::GithubUser.create(login: x['login'], name: x['name'], blog: x['blog'], plublic_repos: x['public_repos'].to_i, followers: x['followers'].to_i, following: x['following'].to_i)
   end
   puts "Database updated successfully."
   gets
@@ -60,8 +60,8 @@ end
 def show_users
   system 'clear'
   puts "All users in database: "
-  Cheepcreep::GithubUser.where(login: !nil).each do |x|
-    puts "User: #{x.login} \t Followers: #{x.followers}"
+  Cheepcreep::GithubUser.order(followers: :desc).each do |x|
+    puts "Followers: #{x.followers} \t\t User: #{x.login}"
   end
   gets
 end
