@@ -4,13 +4,13 @@ class CreateGithubUserTable < ActiveRecord::Migration
       t.string :login, uniqueness: true
       t.string :name
       t.string :blog
-      t.string :plublic_repos
-      t.string :followers
-      t.string :following
+      t.integer :plublic_repos
+      t.integer :followers
+      t.integer :following
     end
   end
 
   def self.down
-    drop_table :github_user
+    drop_table :github_users
   end
 end
