@@ -18,7 +18,7 @@ class Github
   end
 
   #takes a username and returns a list of their followers usernames via the [followers call][followers]
-  def get_followers(input = 'redline6561', options = {:query => {:per_page => 100, :page => 2}})
+  def get_followers(input = 'redline6561', options = {})
     options.merge!({:basic_auth => @auth})
     resp = self.class.get("/users/#{input}/followers", options)
     data = JSON.parse(resp.body)
@@ -36,6 +36,12 @@ class Github
   end
 end
 
+def update_user(opts = {})
+  options = {:body => opts.to_json}
+   options.merge!({:basic_auth => @auth})
+  result = self.class.patch('/user', options)
+end
+
 def user_input_for_followers
   print "Enter a username to pull their followers: "
   gets.chomp
@@ -49,7 +55,9 @@ end
 def insert_database(users = [])
   binding.pry
   users.each do |x|
-    Cheepcreep::GithubUser.create(login: x['login'], name: x['name'], blog: x['blog'], plublic_repos: x['public_repos'], followers: x['followers'], following: x['following'])
+    Cheepcreep::GithubUser.create(login: x['login'], name: x['name'], 
+                                  blog:  x['blog'], plublic_repos: x['public_repos'], 
+                                  followers: x['followers'], following: x['following'])
     puts "Processing: #{x['login']}"
   end
   puts "Database updated successfully."
