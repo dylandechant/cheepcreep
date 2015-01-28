@@ -8,6 +8,7 @@
 /spec/reports/
 /tmp/
 lib/httparty_test.rb
+lib/words.txt
 *.bundle
 *.so
 *.o

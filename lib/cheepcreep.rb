@@ -15,7 +15,11 @@ class Github
 
   def initialize(user = 'apitestfun', pass = 'ironyard1')
     @auth = {:username => user, :password => pass}
-    @string = "testststststs"
+    @string = ''
+    f = File.open('lib/words.txt', 'r')
+    f.each_line do |l|
+      @string += l
+    end
   end
 
 
@@ -36,24 +40,34 @@ class Github
     end
   end
 
-  def create_gist(screen_name = 'redline6561', options = {}, info ={:description => "d test", :public => true, :files => {"werk.txt" => {:content => @string}}})
+  def create_gist(screen_name = 'redline6561', options = {}, info = {:description => "d test", :public => true, :files => {"werk.txt" => {:content => @string}}})
     options = {:body => info.to_json}
     options.merge!({:basic_auth => @auth})
     resp = self.class.post("/gists", options)
     binding.pry
   end
 
-  def edit_gist(id, options = {})
+  def edit_gist(id, options = {}, info = {:description => "d test", :public => true, :files => {"werk.txt" => {:content => @string}}})
     options.merge!({:basic_auth => @auth})
+    #resp =
   end
 
   def delete_gist(id, options = {})
+    options.merge!({:basic_auth => @auth})
+    resp = self.class.delete("/gists/#{id}")
+    binding.pry
   end
 
   def star_gist(id, options = {})
+    options.merge!({:basic_auth => @auth})
+    resp = self.class.put("/gists/#{id}/star", options)
+    binding.pry
   end
 
   def unstar_gist(id, options = {})
+    options.merge!({:basic_auth => @auth})
+    resp = self.class.delete("/gists/#{id}/unstar")
+    binding.pry
   end
 
 #=====================#
