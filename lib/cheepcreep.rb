@@ -15,7 +15,48 @@ class Github
 
   def initialize(user = 'apitestfun', pass = 'ironyard1')
     @auth = {:username => user, :password => pass}
+    @string = "testststststs"
   end
+
+
+#=====================#
+# => do these tonight
+# => do status code checks
+# => do rescues
+#=====================#
+
+  def list_gists(screen_name = 'redline6561', options = {})
+    options.merge!({:basic_auth => @auth})
+    resp = self.class.get("/users/#{screen_name}/gists")
+    data = JSON.parse(resp.body)
+    binding.pry
+    gists = []
+    gists.each do |x|
+      gists << data['gists']
+    end
+  end
+
+  def create_gist(screen_name = 'redline6561', options = {}, info ={:description => "d test", :public => true, :files => {"werk.txt" => {:content => @string}}})
+    options = {:body => info.to_json}
+    options.merge!({:basic_auth => @auth})
+    resp = self.class.post("/gists", options)
+    binding.pry
+  end
+
+  def edit_gist(id, options = {})
+    options.merge!({:basic_auth => @auth})
+  end
+
+  def delete_gist(id, options = {})
+  end
+
+  def star_gist(id, options = {})
+  end
+
+  def unstar_gist(id, options = {})
+  end
+
+#=====================#
 
   #takes a username and returns a list of their followers usernames via the [followers call][followers]
   def get_followers(input = 'redline6561', options = {})
@@ -52,32 +93,6 @@ def get_username
   gets.chomp
 end
 
-#=====================#
-# => do these tonight
-# => do status code checks
-# => do rescues
-#=====================#
-
-def list_gists
-end
-
-def create_gist
-end
-
-def edit_gist
-end
-
-def delete_gist
-end
-
-def star_gist
-end
-
-def unstar_gist
-end
-
-#=====================#
-
 def insert_database(users = [])
   binding.pry
   users.each do |x|
@@ -99,6 +114,7 @@ def show_users
   gets
 end
 
+binding.pry
 exit = false
 while exit != 3
   system 'clear'
